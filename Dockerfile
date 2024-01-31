@@ -5,11 +5,14 @@ RUN if [[ -s "/tmp/requirements-yum.txt" ]]; then yum install -y $(cat /tmp/requ
     rm /tmp/requirements-yum.txt && \
     yum clean all && (rm -rf /var/cache/yum || true)
 
-COPY ./requirements.txt /tmp
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt --target "${LAMBDA_TASK_ROOT}/pylibs" && \
-    rm /tmp/requirements.txt && \
-    (rm -rf /var/task/pylibs/torch/include/ /var/task/pylibs/torch/test || true)
+# default pip user directory
+ENV MAZPYTHONCACHE=/root/.local/lib/python3.8/site-packages/
 
-COPY ./requirements-extra.txt /tmp
-RUN pip3 install --no-cache-dir -r /tmp/requirements-extra.txt --target "${LAMBDA_TASK_ROOT}/pylibs" && \
+COPY ./assets/requirements.txt /tmp
+RUN pip3 install --no-cache-dir --user -r /tmp/requirements.txt && \
+    rm /tmp/requirements.txt && \
+    (rm -rf $MAZPYTHONCACHE/torch/include/ $MAZPYTHONCACHE/torch/test || true)
+
+COPY ./assets/requirements-extra.txt /tmp
+RUN pip3 install --no-cache-dir --user -r /tmp/requirements-extra.txt && \
     rm /tmp/requirements-extra.txt
