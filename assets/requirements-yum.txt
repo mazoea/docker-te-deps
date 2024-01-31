@@ -1,0 +1,3 @@
+unzip
+libgomp
+mesa-libGL
