@@ -16,3 +16,9 @@ RUN pip3 install --no-cache-dir --user -r /tmp/requirements.txt && \
 COPY ./assets/requirements-extra.txt /tmp
 RUN pip3 install --no-cache-dir --user -r /tmp/requirements-extra.txt && \
     rm /tmp/requirements-extra.txt
+
+
+RUN pip3 install --no-cache-dir --user "urllib3<2.0" Transformers
+
+COPY ./assets/models.py /tmp
+RUN cd /tmp && python3 models.py
