@@ -22,3 +22,9 @@ RUN pip3 install --no-cache-dir --user "urllib3<2.0" Transformers
 
 COPY ./assets/models.py /tmp
 RUN cd /tmp && python3 models.py
+
+WORKDIR /te
+EXPOSE 8280
+# remove lambda specific entrypoint
+ENTRYPOINT []
+CMD ["python", "main.py", "--start", "--config=server.host=0.0.0.0"]
