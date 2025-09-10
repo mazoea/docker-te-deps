@@ -6,6 +6,7 @@ on:
     tags:
       - '*'
   workflow_dispatch:
+  workflow_call:
 
 env:
   IMG_REPO: ghcr.io/mazoea/docker-ci-build

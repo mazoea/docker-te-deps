@@ -12,24 +12,18 @@ env:
   JOBNAME: scheduled-build-te-dep-3.9
 
 jobs:
-  build:
+  trigger-ci-te-base-dep:
     runs-on: ubuntu-latest
-    
     steps:
-      - uses: mazoea/ga-maz/start@master
+      - name: Trigger CI workflow for te_base_dep_3.9 branch
+        uses: actions/github-script@v7
         with:
-          MS_TEAMS_URI: ${{ secrets.MS_DQ_TEAMS_WEBHOOK_URI }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: te-dep-3.9
-
-      - name: Pull and build
-        run: |
-          docker build . -f Dockerfile
-
-      - uses: mazoea/ga-maz/end@master
-        with:
-          MS_TEAMS_URI: ${{ secrets.MS_DQ_TEAMS_WEBHOOK_URI }}
-        if: ${{ always() }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const result = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'ci.yml',
+              ref: 'te_base_dep_3.9'
+            });
+            console.log('Workflow triggered for te_base_dep_3.9 branch:', result.status);
