@@ -1,0 +1,35 @@
+name: Schedule Docker Build te-dep-3.9
+
+on:
+  schedule:
+    # Runs at 02:00 UTC every day
+    - cron: '0 2 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+env:
+  IMG_REPO: ghcr.io/mazoea/docker-te-deps
+  JOBNAME: scheduled-build-te-dep-3.9
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: mazoea/ga-maz/start@master
+        with:
+          MS_TEAMS_URI: ${{ secrets.MS_DQ_TEAMS_WEBHOOK_URI }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: te-dep-3.9
+
+      - name: Pull and build
+        run: |
+          docker build . -f Dockerfile
+
+      - uses: mazoea/ga-maz/end@master
+        with:
+          MS_TEAMS_URI: ${{ secrets.MS_DQ_TEAMS_WEBHOOK_URI }}
+        if: ${{ always() }}
