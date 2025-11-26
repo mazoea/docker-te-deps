@@ -1,10 +1,12 @@
+# This workflow triggers a CI build for the te_base_dep_3.9 branch on a schedule
+# to make sure the deps are installable
+# Should prevent surprises when e.g., paddlepaddle stops supporting an old version
+# of python
 name: Schedule Docker Build te-dep-3.9
 
 on:
   schedule:
-    # Runs at 02:00 UTC every day
     - cron: '0 2 * * *'
-  # Allow manual trigger
   workflow_dispatch:
 
 env:
