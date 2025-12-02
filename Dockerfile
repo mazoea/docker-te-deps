@@ -1,8 +1,11 @@
-# first stage - build stage
-FROM public.ecr.aws/lambda/python:3.13 AS build
+FROM public.ecr.aws/lambda/python:3.13
 
 # default pip user directory - if we use something else to install pip, the pip will not recognise already installed packages
 ENV SYSPYTHONCACHE=/root/.local/lib/python3.13/site-packages/
+ENV MAZPYTHONCACHE=/var/runtime/
+
+# make sure pip will find already installed packages
+ENV PYTHONPATH="${MAZPYTHONCACHE}:$PYTHONPATH"
 
 COPY ./assets/requirements*.txt /tmp
 
@@ -23,16 +26,3 @@ RUN echo $PYTHONPATH && \
     rm -rf $SYSPYTHONCACHE && \
     \
     ls -lah /tmp/
-
-
-# second stage
-FROM public.ecr.aws/lambda/python:3.13
-
-ENV SYSPYTHONCACHE=/root/.local/lib/python3.13/site-packages/
-ENV MAZPYTHONCACHE=/var/runtime/
-
-# make sure pip will find already installed packages
-ENV PYTHONPATH="${MAZPYTHONCACHE}:$PYTHONPATH"
-
-# copy installed packages from build stage
-COPY --from=build ${SYSPYTHONCACHE}/ ${MAZPYTHONCACHE}/
