@@ -1,5 +1,5 @@
 # first stage - build stage
-FROM public.ecr.aws/lambda/python:3.13-build as build
+FROM public.ecr.aws/lambda/python:3.13 AS build
 
 # default pip user directory - if we use something else to install pip, the pip will not recognise already installed packages
 ENV SYSPYTHONCACHE=/root/.local/lib/python3.13/site-packages/
@@ -8,9 +8,9 @@ COPY ./assets/requirements*.txt /tmp
 
 RUN echo $PYTHONPATH && \
     \
-    if [[ -s "/tmp/requirements-yum.txt" ]]; then yum install -y $(cat /tmp/requirements-yum.txt); fi && \
+    if [[ -s "/tmp/requirements-yum.txt" ]]; then dnf install -y $(cat /tmp/requirements-yum.txt); fi && \
     rm /tmp/requirements-yum.txt && \
-    yum clean all && (rm -rf /var/cache/yum || true) && \
+    dnf clean all && (rm -rf /var/cache/dnf || true) && \
     \
     pip3 install --no-cache-dir --user -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt && \
