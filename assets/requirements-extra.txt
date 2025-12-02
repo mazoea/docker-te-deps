@@ -16,7 +16,7 @@ numpy~=2.2.0
 # httpcore==1.*
 # h11>=0.13, <=0.15
 ##
-paddlepaddle @ https://mazoea.com/pypi/paddlepaddle-2.5.2-cp39-cp39-manylinux1_x86_64.whl
+# paddlepaddle @ https://mazoea.com/pypi/paddlepaddle-2.5.2-cp39-cp39-manylinux1_x86_64.whl
 # paddlepaddle-2.5.2-cp39-cp39-win_amd64.whl
 ######
 shapely
