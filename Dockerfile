@@ -11,9 +11,9 @@ COPY ./assets/requirements*.txt /tmp
 
 RUN echo $PYTHONPATH && \
     \
-    if [[ -s "/tmp/requirements-yum.txt" ]]; then yum install -y $(cat /tmp/requirements-yum.txt); fi && \
-    rm /tmp/requirements-yum.txt && \
-    yum clean all && (rm -rf /var/cache/yum || true) && \
+    if [[ -s "/tmp/requirements-dnf.txt" ]]; then dnf install -y $(cat /tmp/requirements-dnf.txt); fi && \
+    rm /tmp/requirements-dnf.txt && \
+    dnf clean all && (rm -rf /var/cache/dnf || true) && \
     \
     pip3 install --no-cache-dir --user -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt && \
