@@ -15,11 +15,11 @@ RUN echo $PYTHONPATH && \
     rm -f /tmp/requirements-os.txt && \
     dnf clean all && (rm -rf /var/cache/dnf || true) && \
     \
-    pip3 install --no-cache-dir --user -r /tmp/requirements.txt && \
+    pip3 install -q --no-cache-dir --user -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt && \
     (rm -rf $SYSPYTHONCACHE/torch/include/ $SYSPYTHONCACHE/torch/test || true) && \
     \
-    pip3 install --no-cache-dir --user -r /tmp/requirements-extra.txt && \
+    pip3 install -q --no-cache-dir --user -r /tmp/requirements-extra.txt && \
     rm /tmp/requirements-extra.txt && \
     \
     cp -rf $SYSPYTHONCACHE/* $MAZPYTHONCACHE && \
