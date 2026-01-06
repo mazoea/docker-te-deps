@@ -1,3 +1,3 @@
-paddlepaddle==2.6.2
+paddlepaddle @ https://mazoea.com/pypi/paddlepaddle-2.6.2-cp312-cp312-linux_x86_64.whl
 shapely
 pyclipper
