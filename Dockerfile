@@ -28,5 +28,5 @@ RUN echo $PYTHONPATH && \
     ls -lahR $SYSPYTHONCACHE && \
     rm -rf $SYSPYTHONCACHE && \
     \
-    ls -lah /tmp/ \
+    ls -lah /tmp/ && \
     ls -lahR /root/.local/
