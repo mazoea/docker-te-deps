@@ -34,8 +34,9 @@ jobs:
           echo "Using TAG:$TAG"
 
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker pull $TAG || true
-          docker build . -f Dockerfile --tag $TAG --cache-from $TAG
+          # docker pull $TAG || true
+          # docker build . -f Dockerfile --tag $TAG --cache-from $TAG
+          docker build . -f Dockerfile --tag $TAG
 
       - name: push image
         run: |
