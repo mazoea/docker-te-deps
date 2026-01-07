@@ -15,14 +15,17 @@ RUN echo $PYTHONPATH && \
     rm -f /tmp/requirements-os.txt && \
     dnf clean all && (rm -rf /var/cache/dnf || true) && \
     \
+    echo "Installing Python dependencies ..." && \
     pip3 install -q --no-cache-dir --user -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt && \
     (rm -rf $SYSPYTHONCACHE/torch/include/ $SYSPYTHONCACHE/torch/test || true) && \
     \
+    echo "Installing Extra Python dependencies ..." && \
     pip3 install -q --no-cache-dir --user -r /tmp/requirements-extra.txt && \
     rm /tmp/requirements-extra.txt && \
     \
-    cp -rf $SYSPYTHONCACHE/* $MAZPYTHONCACHE && \
+    mv -rf $SYSPYTHONCACHE/* $MAZPYTHONCACHE && \
     rm -rf $SYSPYTHONCACHE && \
     \
-    ls -lah /tmp/
+    ls -lah /tmp/ \
+    ls -lahR /root/.local/
