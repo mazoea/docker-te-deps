@@ -29,4 +29,6 @@ RUN echo $PYTHONPATH && \
     rm -rf $SYSPYTHONCACHE && \
     \
     ls -lah /tmp/ && \
-    ls -lahR /root/.local/
+    ls -lah /root/.local/ || true && \
+    ls -lahR /root/.local/lib/ || true
+
