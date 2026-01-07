@@ -16,12 +16,12 @@ RUN echo $PYTHONPATH && \
     dnf clean all && (rm -rf /var/cache/dnf || true) && \
     \
     echo "Installing Python dependencies ..." && \
-    pip3 install -q --no-cache-dir --user -r /tmp/requirements.txt && \
+    pip3 install --no-cache-dir --user -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt && \
     (rm -rf $SYSPYTHONCACHE/torch/include/ $SYSPYTHONCACHE/torch/test || true) && \
     \
     echo "Installing Extra Python dependencies ..." && \
-    pip3 install -q --no-cache-dir --user -r /tmp/requirements-extra.txt && \
+    pip3 install --no-cache-dir --user -r /tmp/requirements-extra.txt && \
     rm /tmp/requirements-extra.txt && \
     \
     mv -f $SYSPYTHONCACHE/* $MAZPYTHONCACHE && \
