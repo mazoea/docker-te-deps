@@ -24,7 +24,8 @@ RUN echo $PYTHONPATH && \
     pip3 install -q --no-cache-dir --user -r /tmp/requirements-extra.txt && \
     rm /tmp/requirements-extra.txt && \
     \
-    mv -rf $SYSPYTHONCACHE/* $MAZPYTHONCACHE && \
+    mv -f $SYSPYTHONCACHE/* $MAZPYTHONCACHE && \
+    ls -lahR $SYSPYTHONCACHE && \
     rm -rf $SYSPYTHONCACHE && \
     \
     ls -lah /tmp/ \
