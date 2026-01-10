@@ -1,3 +1,16 @@
-paddlepaddle @ https://mazoea.com/pypi/paddlepaddle-2.6.2-cp312-cp312-linux_x86_64.whl
-shapely
-pyclipper
+paddlepaddle==3.2.0
+aistudio_sdk
+colorlog
+chardet
+ruamel.yaml
+ruamel.yaml.clib
+pydantic
+pydantic_core
+pandas
+prettytable
+ujson
+filelock
+py-cpuinfo
+typing-extensions
+pypdfium2
+ 
