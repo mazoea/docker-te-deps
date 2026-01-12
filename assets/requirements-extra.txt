@@ -1,5 +1,4 @@
 paddlepaddle==3.2.0
-paddlex
 aistudio_sdk
 colorlog
 chardet
