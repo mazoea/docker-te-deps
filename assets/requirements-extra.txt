@@ -13,4 +13,6 @@ filelock
 py-cpuinfo
 typing-extensions
 pypdfium2
- 
+chinese-calendar
+scikit-learn
+colorlog
