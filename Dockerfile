@@ -6,6 +6,7 @@ ENV MAZPYTHONCACHE=/var/runtime/
 
 # make sure pip will find already installed packages
 ENV PYTHONPATH="${MAZPYTHONCACHE}"
+ENV PYTHONDONTWRITEBYTECODE=0
 
 COPY ./assets/requirements*.txt /tmp
 
@@ -23,6 +24,8 @@ RUN echo $PYTHONPATH && \
     echo "Installing Extra Python dependencies ..." && \
     pip3 install --no-cache-dir --user -r /tmp/requirements-extra.txt && \
     rm /tmp/requirements-extra.txt && \
+    \
+    python -m compileall -q /var/runtime /var/lang/lib/python3.12/site-packages/ && \
     \
     mv -f $SYSPYTHONCACHE/* $MAZPYTHONCACHE && \
     ls -lahR $SYSPYTHONCACHE && \
