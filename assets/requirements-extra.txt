@@ -10,3 +10,4 @@ ujson
 filelock
 typing-extensions
 pyclipper
+pandas
