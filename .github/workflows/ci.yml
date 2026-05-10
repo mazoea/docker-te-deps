@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: mazoea/ga-maz/start@master
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: pull and build
         run: |
