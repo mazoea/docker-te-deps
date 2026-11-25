@@ -1,1 +1,3 @@
 *.sh eol=lf
+# byte-for-byte copies of te-server files, compared by te-server CI
+assets/*.txt eol=lf
