@@ -1,10 +1,14 @@
 name: ☃ build-and-publish
+# One image per architecture, each built natively (no QEMU) on a GitHub-hosted runner.
+# Tag push: publishes ghcr.io/mazoea/docker-te-deps:<tag>-amd64 and :<tag>-arm64.
+# Pull requests and manual runs build and smoke-test only.
 on:
   push:
     branches-ignore:
       - '*'
     tags:
       - '*'
+  pull_request:
   workflow_dispatch:
 
 env:
@@ -21,27 +25,53 @@ defaults:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    name: build (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
     steps:
       - uses: mazoea/ga-maz/start@master
 
       - uses: actions/checkout@v4
 
       - name: build
+        env:
+          ARCH: ${{ matrix.arch }}
         run: |
-          TAG=${{ env.IMG_REPO }}:${{ github.ref_name }}
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            TAG="$IMG_REPO:${{ github.ref_name }}-$ARCH"
+          else
+            TAG="te-deps:ci-$ARCH"
+          fi
           echo "Using TAG:$TAG"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          docker build . -f Dockerfile --platform "linux/$ARCH" --tag "$TAG"
 
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          # docker pull $TAG || true
-          # docker build . -f Dockerfile --tag $TAG --cache-from $TAG
-          docker build . -f Dockerfile --tag $TAG
+      - name: smoke test
+        run: |
+          docker image ls "$TAG"
+          # the image keeps te-server's lockfile unchanged
+          docker run --rm --entrypoint cat "$TAG" /opt/te-deps/requirements.txt | cmp - assets/requirements.txt
+          docker run --rm --entrypoint /bin/bash "$TAG" -c '
+            set -e
+            echo "arch: $(uname -m)"
+            python3 -c "import torch, torchvision, paddle, onnxruntime, cv2, numpy; print(\"torch\", torch.__version__, \"paddle\", paddle.__version__, \"onnxruntime\", onnxruntime.__version__)"
+            # what a derived image (te-server) still installs on top of this one
+            pip3 install --dry-run --require-hashes -r /opt/te-deps/requirements.txt | grep -v "^Requirement already satisfied" || true
+          '
 
       - name: push image
-        run: |
-          docker push ${{ env.IMG_REPO }} --all-tags
         if: ${{ success() && github.ref_type == 'tag' }}
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker push "$TAG"
 
       - uses: mazoea/ga-maz/end@master
         if: ${{ always() }}
