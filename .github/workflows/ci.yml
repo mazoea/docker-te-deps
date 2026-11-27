@@ -1,6 +1,7 @@
 name: ☃ build-and-publish
 # One image per architecture, each built natively (no QEMU) on a GitHub-hosted runner.
-# Tag push: publishes ghcr.io/mazoea/docker-te-deps:<tag>-amd64 and :<tag>-arm64.
+# Tag push (the tag is the version, e.g. 2026-11-26): publishes
+# ghcr.io/mazoea/docker-te-deps/te-dep-3.12-pp32:<tag>-x86 and :<tag>-arm64.
 # Pull requests and manual runs build and smoke-test only.
 on:
   push:
@@ -12,7 +13,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMG_REPO: ghcr.io/mazoea/docker-te-deps
+  # python 3.12 + paddle 3.2; a new python / paddle gets a new image name
+  IMG_REPO: ghcr.io/mazoea/docker-te-deps/te-dep-3.12-pp32
   JOBNAME: build-and-test
 
 permissions:
@@ -33,8 +35,10 @@ jobs:
       matrix:
         include:
           - arch: amd64
+            suffix: x86
             runner: ubuntu-24.04
           - arch: arm64
+            suffix: arm64
             runner: ubuntu-24.04-arm
     steps:
       - uses: mazoea/ga-maz/start@master
@@ -46,7 +50,7 @@ jobs:
           ARCH: ${{ matrix.arch }}
         run: |
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            TAG="$IMG_REPO:${{ github.ref_name }}-$ARCH"
+            TAG="$IMG_REPO:${{ github.ref_name }}-${{ matrix.suffix }}"
           else
             TAG="te-deps:ci-$ARCH"
           fi
